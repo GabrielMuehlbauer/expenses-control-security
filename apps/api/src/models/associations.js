@@ -25,15 +25,15 @@ User.hasMany(Expense, {
 });
 
 // Um Usuário tem muitas categorias
-User.hasMany(Category, { 
-    foreignKey: 'userId', 
-    as: 'categories' 
+User.hasMany(Category, {
+    foreignKey: 'userId',
+    as: 'categories'
 });
 
 // Uma Categoria pertence a um Usuário
-Category.belongsTo(User, { 
-    foreignKey: 'userId', 
-    as: 'user' 
+Category.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'user'
 });
 
 // Uma Despesa pertence a um Usuário

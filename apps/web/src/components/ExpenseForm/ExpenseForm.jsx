@@ -13,8 +13,8 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
     // Ajuste da data para o formato aceito pelo input type="date"
     const [date, setDate] = useState(expenseToEdit ? expenseToEdit.date.substring(0, 10) : "");
     const [description, setDescription] = useState(expenseToEdit ? expenseToEdit.description : "");
-    const [category, setCategory] = useState(expenseToEdit ? expenseToEdit.categoryId : ""); 
-    
+    const [category, setCategory] = useState(expenseToEdit ? expenseToEdit.categoryId : "");
+
     // NOVO: Estado para o Status (Padrão inicial é PENDENTE na criação)
     const [status, setStatus] = useState(expenseToEdit ? expenseToEdit.status : "PENDENTE");
 
@@ -34,8 +34,8 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
             try {
                 const response = await api.get('/categories');
                 const formatOptions = response.data.map(cat => ({
-                    value: cat.id, 
-                    label: cat.name 
+                    value: cat.id,
+                    label: cat.name
                 }));
                 setCategoriesOptions(formatOptions);
             } catch (error) {
@@ -58,7 +58,7 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
                 date: date,
                 description: description,
                 categoryId: category,
-                status: status 
+                status: status
             };
 
             // Se existe expenseToEdit, fazemos um PUT (Atualizar). Se não, fazemos um POST (Criar)
@@ -67,14 +67,14 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
             } else {
                 await api.post('/expenses', expenseData);
             }
-            
+
             // Avisa o Dashboard para recarregar a lista (Excelente prática!)
             if (onExpenseAdded) {
                 onExpenseAdded();
             }
 
             if (onClose) {
-                onClose(); 
+                onClose();
             }
 
         } catch (error) {
@@ -96,34 +96,34 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
                 <Input label="Título da Despesa:" type="text" maxLength={150} placeholder="Ex: Compras do mês de maio" value={title} onChange={(e) => setTitle(e.target.value)} required/>
                 <Input label="Data da Despesa:" type="date" value={date} onChange={(e) => setDate(e.target.value)} required/>
                 <Input label="Descrição da Despesa:" type="text" maxLength={255} placeholder="Digite a descrição da despesa" value={description} onChange={(e) => setDescription(e.target.value)}/>
-                
-                <Select 
-                    label="Categoria:" 
-                    id="category" 
-                    value={category} 
-                    onChange={(e) => setCategory(e.target.value)} 
-                    options={categoriesOptions.length > 0 ? categoriesOptions : [{ value: "", label: "Carregando..." }]} 
-                    required 
+
+                <Select
+                    label="Categoria:"
+                    id="category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    options={categoriesOptions.length > 0 ? categoriesOptions : [{ value: "", label: "Carregando..." }]}
+                    required
                 />
 
                 {/* NOVO: Select de Status usando as suas props padronizadas */}
-                <Select 
-                    label="Status:" 
-                    id="status" 
-                    value={status} 
-                    onChange={(e) => setStatus(e.target.value)} 
-                    options={statusOptions} 
-                    required 
+                <Select
+                    label="Status:"
+                    id="status"
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    options={statusOptions}
+                    required
                 />
-                
+
                 {/* Dica extra: Coloquei step="0.01" para permitir centavos */}
                 <Input label="Valor da Despesa:" type="number" step="0.01" min="0.01" max="9999999999.99" value={amount} onChange={(e) => setAmount(e.target.value)} required/>
             </div>
-            
+
             {/* O texto do botão também muda dinamicamente */}
-            <WideButton 
-                type="submit" 
-                text={loading ? "A processar..." : (expenseToEdit ? "Salvar Alterações" : "Adicionar Despesa")} 
+            <WideButton
+                type="submit"
+                text={loading ? "A processar..." : (expenseToEdit ? "Salvar Alterações" : "Adicionar Despesa")}
                 disabled={loading}
             />
         </form>

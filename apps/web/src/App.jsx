@@ -24,13 +24,13 @@ function App() {
 
           <Route path="/register" element={<Register />} />
 
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <PrivateRoute>
                 <Dashboard />
               </PrivateRoute>
-            } 
+            }
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

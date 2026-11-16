@@ -1,0 +1,282 @@
+{
+  "info": {
+    "name": "Expenses Control Security",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "csrfToken",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "expenseId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Obter CSRF",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/auth/csrf"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"CSRF disponivel\", () => pm.response.to.have.status(200));",
+              "pm.collectionVariables.set(\"csrfToken\", pm.response.json().csrfToken);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cadastrar usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/users",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Estudante\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Sessao atual",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/auth/session"
+      }
+    },
+    {
+      "name": "Criar categoria",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/categories",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alimentacao\",\n  \"description\": \"Categoria de demonstracao\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Categoria criada\", () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set(\"categoryId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listar categorias",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/categories"
+      }
+    },
+    {
+      "name": "Criar despesa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/expenses",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Compra demonstrativa\",\n  \"amount\": \"12.34\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"date\": \"2026-01-10\",\n  \"description\": \"Dados ficticios\",\n  \"status\": \"PAGA\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Despesa criada\", () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set(\"expenseId\", pm.response.json().expense.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listar despesas",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/expenses"
+      }
+    },
+    {
+      "name": "Atualizar despesa",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/expenses/{{expenseId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"description\": \"\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Total",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/dashboard/total-expenses"
+      }
+    },
+    {
+      "name": "Quantidade",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/dashboard/expenses-count"
+      }
+    },
+    {
+      "name": "Por categoria",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/dashboard/expenses-by-category"
+      }
+    },
+    {
+      "name": "Excluir despesa",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/expenses/{{expenseId}}"
+      }
+    },
+    {
+      "name": "Excluir categoria",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/categories/{{categoryId}}"
+      }
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/logout"
+      }
+    }
+  ]
+}

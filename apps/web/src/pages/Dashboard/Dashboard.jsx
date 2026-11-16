@@ -24,7 +24,7 @@ function Dashboard() {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [expenseToEdit, setExpenseToEdit] = useState(null);
-    
+
     const [categoryToEdit, setCategoryToEdit] = useState(null);
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -46,13 +46,13 @@ function Dashboard() {
 
     // 2. CONTROLE DE DESPESAS (Comportamentos reativos sem reload)
     function handleEdit(expense) {
-        setExpenseToEdit(expense); 
-        setIsDetailsModalOpen(false);   
-        setIsModalOpen(true);       
+        setExpenseToEdit(expense);
+        setIsDetailsModalOpen(false);
+        setIsModalOpen(true);
     }
 
     function handleExpenseAdded() {
-        setIsModalOpen(false); 
+        setIsModalOpen(false);
         fetchDashboardData(); // Recarrega os dados limpamente via Axios
     }
 
@@ -69,11 +69,11 @@ function Dashboard() {
         };
         setIsDetailsModalOpen(true);
         setSelectedExpense(expenseWithCategoryDetails);
-        setExpenseToEdit(null); 
+        setExpenseToEdit(null);
     }
 
     function handleCloseDetails() {
-        setIsDetailsModalOpen(false); 
+        setIsDetailsModalOpen(false);
     }
 
     // 3. CONTROLE DE CATEGORIAS
@@ -98,7 +98,7 @@ function Dashboard() {
                     <CategorySection
                         allCategories={allCategories}
                         // Ajustado para receber a propriedade correta conforme seu CategoriesState
-                        categoryTotals={categoryTotals} 
+                        categoryTotals={categoryTotals}
                         loading={loading}
                         onAddClick={() => {
                             setCategoryToEdit(null);
@@ -109,17 +109,17 @@ function Dashboard() {
                             setIsCategoryDetailsOpen(true);
                         }}
                     />
-                    <ExpenseSection 
-                        onExpenseClick={handleOpenDetails} 
-                        categories={allCategories} 
-                        expenses={expenses} 
-                        loading={loading} 
+                    <ExpenseSection
+                        onExpenseClick={handleOpenDetails}
+                        categories={allCategories}
+                        expenses={expenses}
+                        loading={loading}
                     />
                 </div>
-                
+
                 {/* Garante que ao abrir um formulário novo, limpa estados de edição anteriores */}
                 <WideButton text='Criar Despesa +' onClick={() => { setExpenseToEdit(null); setIsModalOpen(true); }} />
-                
+
                 {/* MODAL: Criar/Editar Despesa */}
                 <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
                     <ExpenseForm
@@ -146,7 +146,7 @@ function Dashboard() {
                 }}>
                     <CategoryForm
                         onClose={() => { setIsCategoryModalOpen(false); setCategoryToEdit(null); }}
-                        onCategoryAdded={handleCategorySaved} 
+                        onCategoryAdded={handleCategorySaved}
                         categoryToEdit={categoryToEdit}
                     />
                 </Modal>
@@ -158,7 +158,7 @@ function Dashboard() {
                             category={selectedCategory}
                             onEdit={handleCategoryEdit}
                             onClose={() => setIsCategoryDetailsOpen(false)}
-                            onDeleteSuccess={fetchDashboardData} 
+                            onDeleteSuccess={fetchDashboardData}
                         />
                     </Modal>
                 )}

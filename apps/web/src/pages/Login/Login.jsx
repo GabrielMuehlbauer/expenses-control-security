@@ -8,11 +8,11 @@ import styles from './Login.module.css';
 function Login() {
     const { signIn, authError } = useContext(AuthContext);
     const navigate = useNavigate();
-    
+
     // Estados dos campos
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
+
     // Requisitos de Interface: Estados de Controle
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -33,7 +33,7 @@ function Login() {
     async function handleLogin(e) {
         e.preventDefault();
         setError(''); // Limpa erros antigos antes de tentar de novo
-        
+
         // Executa a validação antes de mandar para a API
         if (!validateForm()) return;
 
@@ -46,7 +46,7 @@ function Login() {
             navigate('/'); // Redireciona para o Dashboard após login bem-sucedido
         } catch (err) {
             // Requisito: Tratamento de Erro e Feedback Visual
-            setError(err.response?.status === 429 ? 'Muitas tentativas. Aguarde alguns minutos.' : (err.response?.data?.error || 'Não foi possível conectar ao servidor.')); 
+            setError(err.response?.status === 429 ? 'Muitas tentativas. Aguarde alguns minutos.' : (err.response?.data?.error || 'Não foi possível conectar ao servidor.'));
         } finally {
             setLoading(false); // Desativa o Loading independente se deu certo ou errado
         }
@@ -97,7 +97,7 @@ function Login() {
                     <div style={{ marginTop: '20px', textAlign: 'center' }}>
                         <p style={{ color: '#888', fontSize: '0.9rem', fontFamily: 'var(--font-family-accent)' }}>
                             Ainda não tem conta?{' '}
-                            <span 
+                            <span
                                 style={{ color: 'var(--yellowish-green)', cursor: 'pointer', fontWeight: 'bold' }}
                                 onClick={() => navigate('/register')}
                             >

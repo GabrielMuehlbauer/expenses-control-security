@@ -17,7 +17,7 @@ function CategoryDetails({ category, onClose, onDeleteSuccess, onEdit }) {
     try {
       // Dispara a rota DELETE /categories/:id exigida pelo professor
       await api.delete(`/categories/${category.id}`);
-      
+
       if (onDeleteSuccess) onDeleteSuccess();
       if (onClose) onClose();
     } catch (error) {
@@ -51,9 +51,9 @@ function CategoryDetails({ category, onClose, onDeleteSuccess, onEdit }) {
         >
           <img src={edit} alt="Editar" />
         </button>
-        <button 
+        <button
           className={styles.deleteButton}
-          onClick={handleDelete} 
+          onClick={handleDelete}
           disabled={loading}
         >
           <img src={trash} alt="Excluir" />

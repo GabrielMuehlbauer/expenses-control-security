@@ -26,13 +26,13 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
         setFilterCategory("");
         setFilterMinValue("");
         // Opcional: Se quiser que feche ao limpar, descomente a linha abaixo
-        // setIsFilterOpen(false); 
+        // setIsFilterOpen(false);
     };
 
     return (
         <section className={styles.expenseSection}>
             <div className={styles.expenseSectionContent}>
-                
+
                 {/* CABEÇALHO COM POSITION RELATIVE */}
                 <div className={styles.expenseSectionHeader}>
                     <div>
@@ -41,7 +41,7 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
                             Total: {filteredExpenses.length}
                         </span>
                     </div>
-                    
+
                     {/* Botão para abrir o Filtro */}
                     <div className={styles.filterButton} onClick={() => setIsFilterOpen(!isFilterOpen)}>
                         <span className="material-symbols-outlined">
@@ -73,19 +73,19 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
                                 ))}
                             </select>
 
-                            <input 
-                                className={styles.filterInput} 
-                                type="date" 
+                            <input
+                                className={styles.filterInput}
+                                type="date"
                                 title="Data Específica"
-                                value={filterDate} 
+                                value={filterDate}
                                 onChange={(e) => setFilterDate(e.target.value)}
                             />
 
-                            <input 
-                                className={styles.filterInput} 
-                                type="number" 
+                            <input
+                                className={styles.filterInput}
+                                type="number"
                                 placeholder="Valor Mínimo (Ex: 100)"
-                                value={filterMinValue} 
+                                value={filterMinValue}
                                 onChange={(e) => setFilterMinValue(e.target.value)}
                             />
 

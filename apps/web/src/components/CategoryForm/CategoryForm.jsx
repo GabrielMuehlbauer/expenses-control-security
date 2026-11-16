@@ -13,7 +13,7 @@ function CategoryForm({ onClose, onCategoryAdded, categoryToEdit }) {
         e.preventDefault();
         setLoading(true);
 
-        const categoryData = { 
+        const categoryData = {
             name: name,
             description: description
         };
@@ -25,12 +25,12 @@ function CategoryForm({ onClose, onCategoryAdded, categoryToEdit }) {
                 // Rota POST /categories
                 await api.post("/categories", categoryData);
             }
-            
+
             // Avisa o dashboard para atualizar as categorias na tela
             if (onCategoryAdded) {
                 onCategoryAdded();
             }
- 
+
             if (onClose) {
                 onClose();
             }
@@ -51,25 +51,25 @@ function CategoryForm({ onClose, onCategoryAdded, categoryToEdit }) {
                 <h2 className={styles.title}><i>{categoryToEdit ? "Editar" : "Nova"}</i> Categoria</h2>
             </div>
             <div className={styles.inputGroup}>
-                <Input 
-                    label="Nome da Categoria:" 
-                    type="text" 
-                    placeholder="Ex: Investimentos, Viagens..." maxLength={100} 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)} 
+                <Input
+                    label="Nome da Categoria:"
+                    type="text"
+                    placeholder="Ex: Investimentos, Viagens..." maxLength={100}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                 />
-                <Input 
-                    label="Descrição da Categoria:" 
-                    type="text" 
-                    placeholder="Ex: Gastos com passagens, hotéis..." maxLength={255} 
-                    value={description} 
+                <Input
+                    label="Descrição da Categoria:"
+                    type="text"
+                    placeholder="Ex: Gastos com passagens, hotéis..." maxLength={255}
+                    value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
             </div>
-            <WideButton 
-                type="submit" 
-                text={loading ? "Processando..." : (categoryToEdit ? "Salvar Alterações" : "Adicionar Categoria")} 
+            <WideButton
+                type="submit"
+                text={loading ? "Processando..." : (categoryToEdit ? "Salvar Alterações" : "Adicionar Categoria")}
                 disabled={loading}
             />
         </form>

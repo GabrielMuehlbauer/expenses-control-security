@@ -7,12 +7,12 @@ import styles from './Register.module.css';
 
 function Register() {
     const navigate = useNavigate();
-    
+
     // Estados do formulário
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    
+
     // Estados de controle
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -36,11 +36,11 @@ function Register() {
 
     async function handleRegister(e) {
         e.preventDefault();
-        setError(''); 
-        
+        setError('');
+
         if (!validateForm()) return;
 
-        setLoading(true); 
+        setLoading(true);
 
         try {
             // Rota exigida pelo Back-End para criar utilizador
@@ -48,12 +48,12 @@ function Register() {
 
             // Se der certo, avisa o utilizador e manda ele para o Login!
             alert('Conta criada com sucesso! Faça login para entrar.');
-            navigate('/login'); 
+            navigate('/login');
         } catch (err) {
             const apiError = err.response?.data?.error;
             setError(apiError || 'Erro ao criar conta. Verifique os dados e tente novamente.');
         } finally {
-            setLoading(false); 
+            setLoading(false);
         }
     }
 
@@ -110,7 +110,7 @@ function Register() {
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
                     <p style={{ color: '#888', fontSize: '0.9rem', fontFamily: 'var(--font-family-accent)' }}>
                         Já tem uma conta?{' '}
-                        <span 
+                        <span
                             style={{ color: 'var(--yellowish-green)', cursor: 'pointer', fontWeight: 'bold' }}
                             onClick={() => navigate('/login')}
                         >

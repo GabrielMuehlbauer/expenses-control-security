@@ -40,7 +40,7 @@ function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit }) {
 
   // 1. Lógica de cores do status (igual ao ExpenseRow)
   const isPaga = expense.status === 'PAGA';
-  const statusColor = isPaga ? '#abd035' : '#993f3f'; 
+  const statusColor = isPaga ? '#abd035' : '#993f3f';
   const statusBg = isPaga ? 'rgba(0, 230, 118, 0.1)' : 'rgba(255, 183, 77, 0.1)';
 
   return (

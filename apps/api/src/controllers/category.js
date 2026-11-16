@@ -14,7 +14,7 @@ class Category {
         }
         return await CategoryModel.create(name, description, userId);
     }
-    
+
     async getAll(userId) {
         return await CategoryModel.getAll(userId);
     }
