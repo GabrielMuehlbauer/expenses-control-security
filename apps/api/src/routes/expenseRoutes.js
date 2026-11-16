@@ -1,0 +1,10 @@
+const express = require('express');
+const view = require('../views/expense');
+const { validate, validateId, expense } = require('../middleware/validation');
+const router = express.Router();
+router.post('/', validate(body => expense(body)), view.create);
+router.get('/', view.getAll);
+router.get('/:id', validateId, view.getById);
+router.put('/:id', validateId, validate(body => expense(body, true)), view.update);
+router.delete('/:id', validateId, view.remove);
+module.exports = router;
