@@ -7,9 +7,9 @@ Verificação local em 16/11/2026, com Node 24.11.0, npm 11.6.1, MariaDB 10.4.32
 | Instalação limpa pelo lockfile, sem scripts de instalação | Aprovada |
 | Lint de API e frontend | Aprovado |
 | Build de produção | Aprovado |
-| Test Runner: configuração, migração legada e API com banco real | 23 testes reportados, todos aprovados |
-| Navegador desktop | 2 fluxos completos aprovados |
-| Navegador com emulação mobile | 2 fluxos completos aprovados |
+| Test Runner: configuração, migração legada, API, família e comprovantes | 38 testes reportados, todos aprovados |
+| Navegador desktop | 3 fluxos completos aprovados |
+| Navegador com emulação mobile | 3 fluxos completos aprovados |
 | Auditoria de dependências após atualização | 0 vulnerabilidades reportadas pelo npm |
 
 ## Cobertura funcional e de segurança
@@ -25,6 +25,10 @@ Verificação local em 16/11/2026, com Node 24.11.0, npm 11.6.1, MariaDB 10.4.32
 - Logout com invalidação de cópia do token e persistência correta após recarga.
 - Limitação de tentativas de login e mensagem de erro/repetição no dashboard.
 - Atualização de schema legado, preservação de IDs, vínculos, descrição, hash de senha e data, arredondamento para centavos e repetição do executor.
+- Receitas recebidas, despesas pagas, saldo positivo/negativo e exclusão de pendentes do saldo.
+- Filho inicialmente somente de leitura, gestão pelo responsável, bloqueio de acesso a pais/irmãos/outras famílias e revogação imediata de permissões.
+- Comprovantes PNG, JPEG e PDF, download autenticado, troca e exclusão dos arquivos, restrições de conteúdo, limite de tamanho, cota e concorrência com exclusão.
+- Fluxo de navegador com criação de filho, seleção de conta, receitas/despesas, saldo, upload/download e permissões refletidas na interface.
 
 ## Reprodução
 
@@ -43,4 +47,4 @@ O banco padrão de testes precisa terminar em `_test`. O teste de migração cri
 
 Falhas de navegador geram artefatos em `test-results/` e um relatório em `playwright-report/`, ambos ignorados pelo Git. O workflow valida também MySQL 8.4 no GitHub; sua execução remota deve ser conferida após publicar o código.
 
-Os resultados não abrangem auditoria externa, infraestrutura de hospedagem, teste de carga ou conformidade integral com OWASP ASVS. A cobertura das funcionalidades adicionais de receitas, comprovantes e controle parental será acrescentada junto à implementação dessas regras.
+Os resultados não abrangem auditoria externa, infraestrutura de hospedagem, teste de carga ou conformidade integral com OWASP ASVS.

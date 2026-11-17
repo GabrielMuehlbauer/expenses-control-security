@@ -4,7 +4,7 @@ import { currency } from '../../utils/format';
 import styles from './Header.module.css';
 import logoExpensesControl from '../../assets/images/logo-expenses-control.svg';
 import logout from '../../assets/images/logout.svg';
-function Header({ valorTotal }) {
+function Header({ summary, showSummary = true }) {
   const { signOut } = useContext(AuthContext);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -21,7 +21,11 @@ function Header({ valorTotal }) {
         <img src={logout} alt="" /><span className={styles.logoutText}>{busy ? 'Saindo...' : 'Sair'}</span>
       </button></div>
       {error && <p role="alert">{error}</p>}
-      <div><p>Total Gasto</p><h2 className={styles.totalValue}>{currency(valorTotal)}</h2></div>
+      {showSummary && <div className={styles.summary}>
+        <div><p>Recebido</p><h2>{currency(summary?.received)}</h2></div>
+        <div><p>Pago</p><h2>{currency(summary?.paid)}</h2></div>
+        <div><p>Saldo</p><h2>{currency(summary?.balance)}</h2></div>
+      </div>}
     </div>
   </header>;
 }

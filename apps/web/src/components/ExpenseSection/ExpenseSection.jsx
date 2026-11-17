@@ -9,15 +9,16 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
     const [filterDate, setFilterDate] = useState("");
     const [filterCategory, setFilterCategory] = useState("");
     const [filterMinValue, setFilterMinValue] = useState("");
+    const [filterType, setFilterType] = useState('');
 
-    const activeFiltersCount = [filterStatus, filterDate, filterCategory, filterMinValue].filter(Boolean).length;
+    const activeFiltersCount = [filterStatus, filterDate, filterCategory, filterMinValue, filterType].filter(Boolean).length;
 
     const filteredExpenses = expenses.filter(expense => {
         const matchStatus = filterStatus ? expense.status === filterStatus : true;
         const matchDate = filterDate ? expense.date.startsWith(filterDate) : true;
         const matchCategory = filterCategory ? String(expense.categoryId) === String(filterCategory) : true;
         const matchValue = filterMinValue ? Number(expense.amount) >= Number(filterMinValue) : true;
-        return matchStatus && matchDate && matchCategory && matchValue;
+        return matchStatus && matchDate && matchCategory && matchValue && (!filterType || expense.type === filterType);
     });
 
     const clearFilters = () => {
@@ -25,6 +26,7 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
         setFilterDate("");
         setFilterCategory("");
         setFilterMinValue("");
+        setFilterType('');
         // Opcional: Se quiser que feche ao limpar, descomente a linha abaixo
         // setIsFilterOpen(false);
     };
@@ -36,7 +38,7 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
                 {/* CABEÇALHO COM POSITION RELATIVE */}
                 <div className={styles.expenseSectionHeader}>
                     <div>
-                        <h2>Minhas despesas</h2>
+                        <h2>Histórico financeiro</h2>
                         <span className={styles.expenseCount}>
                             Total: {filteredExpenses.length}
                         </span>
@@ -62,10 +64,11 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
 
                             <select className={styles.filterInput} value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                                 <option value="">Status...</option>
-                                <option value="PAGA">Pagas</option>
+                                <option value="PAGA">Pagos / recebidos</option>
                                 <option value="PENDENTE">Pendentes</option>
                             </select>
 
+                            <select aria-label="Filtrar tipo de lançamento" className={styles.filterInput} value={filterType} onChange={event => setFilterType(event.target.value)}><option value="">Receitas e despesas</option><option value="EXPENSE">Despesas</option><option value="INCOME">Receitas</option></select>
                             <select className={styles.filterInput} value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
                                 <option value="">Categoria...</option>
                                 {categories.map((cat) => (
@@ -115,6 +118,7 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
                                     description={expense.description}
                                     amount={expense.amount}
                                     status={expense.status}
+                                    type={expense.type}
                                     onClick={() => onExpenseClick(expense)}
                                 />
                             )

@@ -1,12 +1,13 @@
 import styles from './CategorySection.module.css';
 import CategoryCard from '../CategoryCard/CategoryCard';
 
-function CategorySection({ allCategories = [], categoryTotals = [], loading, onAddClick, onCategoryClick }) {
+function CategorySection({ allCategories = [], categoryTotals = [], loading, onAddClick, onCategoryClick, canCreate = true }) {
 
     return (
         <section className={styles.categorySection}>
             <div className={styles.categorySectionContent}>
-                <h2>Total por categoria</h2>
+                <h2>Despesas por categoria</h2>
+                <p>Inclui lançamentos pendentes.</p>
                 <div className={styles.containerCards}>
                     {loading ? (
                         <p>Carregando...</p>
@@ -29,9 +30,9 @@ function CategorySection({ allCategories = [], categoryTotals = [], loading, onA
                         <p>Nenhuma categoria registrada.</p>
                     )}
 
-                    <button className={styles.categoryCardAddButton} onClick={onAddClick}>
+                    {canCreate && <button className={styles.categoryCardAddButton} onClick={onAddClick}>
                                 +
-                            </button>
+                            </button>}
                 </div>
             </div>
         </section>

@@ -1,0 +1,6 @@
+.panel { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 15px 0; color: var(--faded-yellowish-green); font-family: var(--font-family-body); }
+.panel select, .panel button { border: 1px solid var(--faded-yellowish-green); border-radius: 20px; padding: 10px; background: var(--light-yellowish-green); color: var(--dark-gray); max-width: 100%; }
+.panel label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.form { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
+.permissions { border: 1px solid var(--faded-yellowish-green); padding: 12px; margin: 16px 0; border-radius: 15px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.permissions p { overflow-wrap: anywhere; }

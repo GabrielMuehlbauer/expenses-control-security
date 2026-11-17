@@ -44,3 +44,10 @@ jobs:
           printf 'PORT=3001\n' > apps/api/.env.test
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: evidencias-navegador
+          path: |
+            playwright-report/
+            test-results/

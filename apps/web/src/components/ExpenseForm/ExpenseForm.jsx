@@ -6,7 +6,9 @@ import WideButton from "../WideButton/WideButton";
 import Select from "../Select/Select";
 
 // Adicionamos a prop 'expenseToEdit'
-function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
+function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit, defaultType = 'EXPENSE' }) {
+    const [type, setType] = useState(expenseToEdit?.type || defaultType);
+    const label = type === 'INCOME' ? 'Receita' : 'Despesa';
     // 1. Estados dos inputs (Se tiver expenseToEdit, preenche com os dados, senão, fica vazio)
     const [title, setTitle] = useState(expenseToEdit ? expenseToEdit.title : "");
     const [amount, setAmount] = useState(expenseToEdit ? expenseToEdit.amount : "");
@@ -25,7 +27,7 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
     // Opções para o novo campo de Status
     const statusOptions = [
         { value: "PENDENTE", label: "Pendente" },
-        { value: "PAGA", label: "Paga" }
+        { value: "PAGA", label: type === 'INCOME' ? 'Recebida' : 'Paga' }
     ];
 
     // 3. Busca as categorias assim que o modal abre
@@ -58,14 +60,15 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
                 date: date,
                 description: description,
                 categoryId: category,
-                status: status
+                status: status,
+                type
             };
 
             // Se existe expenseToEdit, fazemos um PUT (Atualizar). Se não, fazemos um POST (Criar)
             if (expenseToEdit) {
-                await api.put(`/expenses/${expenseToEdit.id}`, expenseData);
+                await api.put(`/entries/${expenseToEdit.id}`, expenseData);
             } else {
-                await api.post('/expenses', expenseData);
+                await api.post('/entries', expenseData);
             }
 
             // Avisa o Dashboard para recarregar a lista (Excelente prática!)
@@ -90,12 +93,13 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className={styles.header}>
                 {/* O título muda dependendo se é criação ou edição */}
-                <h2 className={styles.title}><i>{expenseToEdit ? "Editar" : "Criar"}</i> Despesa</h2>
+                <h2 className={styles.title}><i>{expenseToEdit ? "Editar" : "Criar"}</i> {label}</h2>
             </div>
             <div className={styles.inputGroup}>
-                <Input label="Título da Despesa:" type="text" maxLength={150} placeholder="Ex: Compras do mês de maio" value={title} onChange={(e) => setTitle(e.target.value)} required/>
-                <Input label="Data da Despesa:" type="date" value={date} onChange={(e) => setDate(e.target.value)} required/>
-                <Input label="Descrição da Despesa:" type="text" maxLength={255} placeholder="Digite a descrição da despesa" value={description} onChange={(e) => setDescription(e.target.value)}/>
+                <Select label="Tipo:" id="entry-type" value={type} onChange={event => setType(event.target.value)} options={[{ value: 'EXPENSE', label: 'Despesa' }, { value: 'INCOME', label: 'Receita' }]} required />
+                <Input label={`Título da ${label}:`} type="text" maxLength={150} placeholder="Título do lançamento" value={title} onChange={(e) => setTitle(e.target.value)} required/>
+                <Input label={`Data da ${label}:`} type="date" value={date} onChange={(e) => setDate(e.target.value)} required/>
+                <Input label={`Descrição da ${label}:`} type="text" maxLength={255} placeholder="Descrição do lançamento" value={description} onChange={(e) => setDescription(e.target.value)}/>
 
                 <Select
                     label="Categoria:"
@@ -117,13 +121,13 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit }) {
                 />
 
                 {/* Dica extra: Coloquei step="0.01" para permitir centavos */}
-                <Input label="Valor da Despesa:" type="number" step="0.01" min="0.01" max="9999999999.99" value={amount} onChange={(e) => setAmount(e.target.value)} required/>
+                <Input label={`Valor da ${label}:`} type="number" step="0.01" min="0.01" max="9999999999.99" value={amount} onChange={(e) => setAmount(e.target.value)} required/>
             </div>
 
             {/* O texto do botão também muda dinamicamente */}
             <WideButton
                 type="submit"
-                text={loading ? "A processar..." : (expenseToEdit ? "Salvar Alterações" : "Adicionar Despesa")}
+                text={loading ? "A processar..." : (expenseToEdit ? "Salvar Alterações" : `Adicionar ${label}`)}
                 disabled={loading}
             />
         </form>

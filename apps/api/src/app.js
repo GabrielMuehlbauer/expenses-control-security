@@ -8,6 +8,8 @@ const cookieParser = require('cookie-parser');
 const config = require('./config/auth');
 const csrf = require('./middleware/csrf');
 const auth = require('./middleware/auth');
+const { publicUser } = require('./models/user');
+const { requirePermission, accountScope } = require('./middleware/permissions');
 const { errorHandler, httpError } = require('./utils/errors');
 require('./models/associations');
 const app = express();
@@ -21,7 +23,7 @@ app.use((req, res, next) => { req.id = crypto.randomUUID(); res.set('X-Request-I
 app.use(cors({ origin(origin, callback) {
   if (!origin || config.origins.includes(origin)) callback(null, true);
   else callback(httpError(403, 'Origem nao permitida.'));
-}, credentials: true, allowedHeaders: ['Content-Type', 'X-CSRF-Token'] }));
+}, credentials: true, allowedHeaders: ['Content-Type', 'X-CSRF-Token', 'X-Account-Id'] }));
 app.use(express.json({ limit: '16kb', strict: true }));
 app.use(cookieParser(config.cookieSecret));
 app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
@@ -29,14 +31,17 @@ app.get('/api/health', (_req, res) => res.json({ status: 'online' }));
 app.get('/api/auth/csrf', csrf.issue);
 app.use('/api', csrf.protect, require('./routes/userRoutes'));
 app.use('/api', auth);
-app.get('/api/auth/session', (req, res) => res.json({ user: req.user }));
+app.get('/api/auth/session', (req, res) => res.json({ user: publicUser(req.user) }));
 app.post('/api/auth/logout', async (req, res) => {
   await req.session.destroy();
   res.clearCookie(config.sessionCookie, config.cookieOptions);
   res.status(204).end();
 });
+app.use('/api/children', require('./routes/familyRoutes'));
+app.use(['/api/categories', '/api/expenses', '/api/entries', '/api/dashboard'], accountScope, requirePermission('VIEW'));
 app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/expenses', require('./routes/expenseRoutes'));
+app.use('/api/entries', require('./routes/expenseRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api', (_req, _res, next) => next(httpError(404, 'Rota nao encontrada.')));
 const webDirectory = path.resolve(__dirname, '../../web/dist');

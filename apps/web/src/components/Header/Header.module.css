@@ -53,3 +53,12 @@ header button img {
     font-family: var(--font-family-accent);
     font-size: 14px;
 }
+
+.summary { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-end; }
+.totalValueContainer { flex-wrap: wrap; justify-content: flex-end; }
+@media (max-width: 600px) {
+    .headerContent { align-items: flex-start; gap: 12px; }
+    .totalValueContainer { gap: 10px; }
+    .summary { gap: 10px; }
+    .summary h2 { font-size: 18px; }
+}

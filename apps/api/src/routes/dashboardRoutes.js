@@ -2,6 +2,7 @@ const express = require('express');
 const DashboardView = require('../views/dashboard.js');
 
 const router = express.Router();
+router.get('/summary', DashboardView.getSummary);
 
 /* ROTAS PARA DASHBOARD */
 // Rota Valor Total das Despesas

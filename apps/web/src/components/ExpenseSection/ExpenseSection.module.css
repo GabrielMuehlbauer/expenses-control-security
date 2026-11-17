@@ -70,8 +70,8 @@
 }
 
 .containerRows {
-    max-height: 200px;
-    overflow-y: scroll;
+    max-height: 360px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 15px;

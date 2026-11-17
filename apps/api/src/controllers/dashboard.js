@@ -1,5 +1,6 @@
 const ExpenseModel = require('../models/expense');
 module.exports = {
+  getSummary: userId => ExpenseModel.summary(userId),
   getTotalExpenses: userId => ExpenseModel.getTotal(userId),
   getExpensesCount: userId => ExpenseModel.getCount(userId),
   async getExpensesByCategory(userId) {

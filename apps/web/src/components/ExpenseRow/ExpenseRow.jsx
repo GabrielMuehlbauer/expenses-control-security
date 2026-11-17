@@ -1,6 +1,6 @@
 import styles from './ExpenseRow.module.css';
 
-function ExpenseRow({ title, category, date, amount, status, onClick }) {
+function ExpenseRow({ title, category, date, amount, status, type, onClick }) {
 
     // Define as cores com base no status (Verde para PAGA, Vermelho para PENDENTE)
     const isPaga = status === 'PAGA';
@@ -24,13 +24,13 @@ function ExpenseRow({ title, category, date, amount, status, onClick }) {
                         fontWeight: 'bold',
                         textTransform: 'uppercase'
                     }}>
-                        {status || 'PENDENTE'}
+                        {status === 'PAGA' ? (type === 'INCOME' ? 'Recebida' : 'Paga') : 'Pendente'}
                     </span>
                 </div>
 
                 <div>
                     <p className={styles.categoryTag}>{category?.name || category}</p>
-                    <p className={styles.expenseValue}>R${Number(amount || 0).toFixed(2).replace('.', ',')}</p>
+                    <p className={styles.expenseValue}>{type === 'INCOME' ? '+ ' : '− '}R${Number(amount || 0).toFixed(2).replace('.', ',')}</p>
                 </div>
             </div>
         </div>

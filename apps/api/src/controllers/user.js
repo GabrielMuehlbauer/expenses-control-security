@@ -20,7 +20,7 @@ class UserController {
     await Session.destroy({ where: { expiresAt: { [Op.lte]: new Date() } } });
     const session = await Session.create({ userId: user.id, csrfHash: hash(csrfToken), expiresAt: new Date(Date.now() + config.ttl * 1000) });
     const token = jwt.sign({}, config.jwt.secret, { algorithm: 'HS256', expiresIn: config.ttl, subject: user.id, jwtid: session.id, issuer: config.jwt.issuer, audience: config.jwt.audience });
-    return { token, user: { id: user.id, name: user.name, email: user.email } };
+    return { token, user: UserModel.publicUser(user) };
   }
 }
 module.exports = new UserController();

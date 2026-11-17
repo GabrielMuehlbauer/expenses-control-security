@@ -4,8 +4,9 @@ import loading from '../../assets/images/loading-blocks.gif';
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/delete.svg';
 import api from '../../services/api';
+import ReceiptPanel from '../ReceiptPanel/ReceiptPanel';
 
-function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit }) {
+function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit, canEdit = true, canDelete = true, canAttach = true }) {
   // Proteção: Se por algum motivo o componente abrir sem uma despesa, não deixa o app crashar
   if (!expense) return (
     <>
@@ -25,7 +26,7 @@ function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit }) {
     if (isConfirmed) {
       try {
         // Adicionando o prefixo /api para a chamada
-        await api.delete(`/expenses/${expense.id}`);
+        await api.delete(`/entries/${expense.id}`);
         alert('Despesa excluída com sucesso!');
         if (onExpenseDeleted) {
           onExpenseDeleted(); // Avisa o Dashboard que a despesa foi removida
@@ -66,7 +67,7 @@ function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit }) {
             fontWeight: 'bold',
             textTransform: 'uppercase'
           }}>
-            {expense.status || 'PENDENTE'}
+            {expense.status === 'PAGA' ? (expense.type === 'INCOME' ? 'Recebida' : 'Paga') : 'Pendente'}
           </span>
         </div>
       </div>
@@ -77,7 +78,7 @@ function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit }) {
 
       {/* Bloco de destaque para o Valor da Despesa (bem grande, igual ao protótipo) */}
       <div className={styles.amountContainer}>
-        <p className={styles.amountLabel}>Valor da Despesa</p>
+        <p className={styles.amountLabel}>{expense.type === 'INCOME' ? 'Valor da Receita' : 'Valor da Despesa'}</p>
         <h3 className={styles.amountValue}>{currency(expense.amount)}</h3>
       </div>
 
@@ -88,15 +89,17 @@ function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit }) {
 
       {/* Botões de Ação para o CRUD completo (Editar e Eliminar) */}
       <div className={styles.actions}>
-        <button className={styles.editButton} onClick={() => onEdit(expense)}>
+        {canEdit && <button className={styles.editButton} onClick={() => onEdit(expense)}>
           {/* Certifique-se de que a variável 'edit' está importada no topo do ficheiro */}
           <img src={edit} alt="Editar" />
-        </button>
-        <button className={styles.deleteButton} onClick={handleDelete}>
+        </button>}
+        {canDelete && <button className={styles.deleteButton} onClick={handleDelete}>
           {/* Certifique-se de que a variável 'trash' está importada no topo do ficheiro */}
           <img src={trash} alt="Excluir" />
-        </button>
+        </button>}
       </div>
+
+      <ReceiptPanel entryId={expense.id} canAttach={canAttach} canEdit={canEdit} canDelete={canDelete} />
 
     </div>
   );

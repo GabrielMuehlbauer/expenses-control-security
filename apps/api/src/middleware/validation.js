@@ -37,7 +37,7 @@ function category(body) {
   return { name: text(body.name, 'Nome', 1, 100), description: body.description === undefined ? '' : text(body.description, 'Descricao', 0, 255) };
 }
 function expense(body, partial = false) {
-  const fields = ['title', 'amount', 'categoryId', 'date', 'description', 'status'];
+  const fields = ['title', 'amount', 'categoryId', 'date', 'description', 'status', 'type'];
   bodyObject(body, fields);
   if (partial && Object.keys(body).length === 0) fail('Informe algum campo para atualizar.');
   const result = {};
@@ -50,14 +50,16 @@ function expense(body, partial = false) {
     if (key === 'date') result.date = date(value);
     if (key === 'description') result.description = value === undefined ? '' : text(value, 'Descricao', 0, 255);
     if (key === 'status') result.status = value === undefined ? 'PENDENTE' : status(value);
+    if (key === 'type') result.type = entryType(value === undefined ? 'EXPENSE' : value);
   }
   return result;
 }
 function filters(query) {
-  bodyObject(query, ['status', 'categoryId', 'minAmount', 'maxAmount', 'startDate', 'endDate']);
+  bodyObject(query, ['status', 'categoryId', 'minAmount', 'maxAmount', 'startDate', 'endDate', 'type']);
   const result = {};
   for (const [key, value] of Object.entries(query)) {
-    if (key === 'status') result[key] = status(value);
+    if (key === 'type') result[key] = entryType(value);
+    else if (key === 'status') result[key] = status(value);
     else if (key === 'categoryId') result[key] = id(value);
     else if (key.endsWith('Amount')) result[key] = money(value, true);
     else result[key] = date(value, true);
@@ -68,4 +70,16 @@ function filters(query) {
 }
 const validate = parser => (req, _res, next) => { req.body = parser(req.body); next(); };
 const validateId = (req, _res, next) => { id(req.params.id); next(); };
-module.exports = { credentials, category, expense, filters, validate, validateId, money, date, text };
+function entryType(value) { if (!['EXPENSE', 'INCOME'].includes(value)) fail('Tipo deve ser EXPENSE ou INCOME.'); return value; }
+function permissions(value) {
+  const { ALL } = require('./permissions');
+  if (!Array.isArray(value) || value.some(item => !ALL.includes(item)) || new Set(value).size !== value.length) fail('Permissoes invalidas.');
+  if (value.length && !value.includes('VIEW')) fail('Permissoes de alteracao exigem permissao de visualizar.');
+  return value;
+}
+function child(body) {
+  bodyObject(body, ['name', 'email', 'password', 'permissions']);
+  return { ...credentials({ name: body.name, email: body.email, password: body.password }, true), permissions: permissions(body.permissions === undefined ? ['VIEW'] : body.permissions) };
+}
+function permissionUpdate(body) { bodyObject(body, ['permissions']); return { permissions: permissions(body.permissions) }; }
+module.exports = { credentials, category, expense, filters, validate, validateId, money, date, text, child, permissionUpdate };

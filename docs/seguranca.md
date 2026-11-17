@@ -33,3 +33,25 @@ Use HTTPS, origem exata, usuário de banco dedicado e segredos próprios fora do
 O limitador em memória serve a uma instância de API. Uma implantação com múltiplas instâncias precisa de armazenamento compartilhado para esse controle. A aplicação não confia automaticamente em `X-Forwarded-For`; qualquer configuração de proxy deve ser limitada à infraestrutura efetiva.
 
 O override de `uuid` atualiza a dependência transitiva do Sequelize para a versão 11, que ainda oferece a interface CommonJS utilizada pelo ORM. Essa compatibilidade é coberta pelos testes com banco. A dependência `dottie` ainda é marcada como descontinuada pelo registro, sem alerta de vulnerabilidade na auditoria executada; acompanhar as atualizações do Sequelize.
+
+## Controle parental
+
+O responsável tem todas as funções sobre sua conta e as de seus filhos diretos. Não existe administrador global com acesso automático aos dados de outras famílias. O papel legado `admin` não ignora essas regras.
+
+| Permissão do filho | Acesso |
+|---|---|
+| VIEW | Ler os próprios lançamentos, categorias, resumo e comprovantes |
+| CREATE | Criar lançamentos e categorias próprios |
+| EDIT | Editar lançamentos e categorias próprios; permite substituir um comprovante quando ATTACH também está habilitada |
+| DELETE | Excluir lançamentos e categorias próprios; permite remover um comprovante quando ATTACH também está habilitada |
+| ATTACH | Anexar um comprovante a lançamento próprio; substituição e remoção exigem também EDIT ou DELETE, respectivamente |
+
+Filhos começam somente com VIEW. Permissões de alteração exigem VIEW; revogar VIEW remove as demais. Toda autorização é repetida no servidor. Um filho não cria outras contas, não altera permissões, não consulta seu responsável, seus irmãos ou outras famílias. Alterações de permissões valem na próxima requisição, mesmo em uma sessão já aberta; recarregar a página atualiza também os botões da interface.
+
+## Uploads privados
+
+O servidor aceita um arquivo por lançamento, de até 5 MB, verificando extensão, MIME e conteúdo. PNG/JPEG são decodificados e regravados, sem metadados, com limite de 20 megapixels. PDFs são analisados em worker com limite de memória e tempo; documentos criptografados, complexos (mais de 100 páginas/20 mil objetos), com formulários, anexos, scripts ou ações/links ativos são rejeitados. Use comprovantes estáticos.
+
+O armazenamento usa nomes UUID próprios, não caminhos fornecidos pelo usuário. Há cota de 100 MB por conta e limite de uploads por IP. Arquivos só são baixados após verificar o lançamento e seu proprietário, com `Content-Disposition: attachment`, CSP restritiva e `nosniff`; nunca são publicados por uma rota estática. A biblioteca de download recebe somente um caminho interno validado, inclusive quando o projeto fica em uma pasta oculta do sistema.
+
+A validação reduz o risco de conteúdo ativo, mas não substitui antivírus nem assegura que um leitor de PDF externo seja livre de falhas. A proteção da pasta, backups e permissões do usuário do processo fazem parte da configuração do servidor.

@@ -12,6 +12,20 @@ As tabelas iniciais de usuários, categorias e despesas mantêm seus nomes e ide
 
 Sessões têm ID aleatório, usuário, hash CSRF e expiração. O JWT aponta para a sessão; sua assinatura e o registro no banco precisam ser válidos. Excluir o registro revoga a sessão mesmo que alguém retenha uma cópia do cookie.
 
+### Receitas, saldo e família
+
+O modelo `expense` original também recebe lançamentos do tipo `INCOME`, preservando a tabela e os IDs existentes. A migration marca os registros anteriores como `EXPENSE`. A coleção `/api/entries` é usada pelo frontend; `/api/expenses` permanece como alias de compatibilidade. O status interno `PAGA` representa tanto despesa paga quanto receita recebida, com rótulos adequados na interface.
+
+`GET /api/dashboard/summary` retorna valores decimais `received`, `paid` e `balance`, considerando somente `PAGA`. O banco soma em DECIMAL e a diferença é calculada com centavos inteiros (`BigInt`). Os endpoints antigos de despesas por categoria continuam contando despesas registradas, inclusive pendentes; a interface explicita essa regra.
+
+`users.parentId` referencia o responsável. O cadastro público sempre cria conta independente; somente um responsável pode criar filhos diretos pela rota própria. As permissões são lidas do banco em toda requisição. O cabeçalho `X-Account-Id` seleciona a conta financeira, mas só é aceito para o próprio usuário ou um filho direto do responsável autenticado. Nenhum ID enviado pelo cliente concede acesso por si só.
+
+### Comprovantes
+
+`receipts` mantém um registro por lançamento, com proprietário, tipo, tamanho e nome de armazenamento gerado pelo servidor. A pasta é privada, separada do frontend, e a API exige autorização antes de receber ou transmitir o arquivo. Substituição, remoção e exclusão de lançamentos usam locks de conta e registro para manter a cota e evitar arquivos órfãos em requisições concorrentes.
+
+Arquivos e banco não formam uma transação única de sistema operacional. Uma falha abrupta do processo ou do disco pode exigir reconciliação dos arquivos privados com os metadados. Faça e restaure os backups de ambos em conjunto; nenhuma migração copia comprovantes antigos automaticamente.
+
 ## Execução das migrations
 
 As migrations originais foram preservadas, com ajustes de argumentos não utilizados. As novas migrations são aplicadas depois delas. O executor em `src/database/migrate.js` usa os mesmos nomes e a mesma tabela `SequelizeMeta` do sequelize-cli, com lock consultivo no banco para evitar execução simultânea. A ferramenta antiga foi removida para eliminar dependências transitivas vulneráveis; o ORM e os arquivos de migration foram mantidos.
@@ -22,7 +36,7 @@ O executor roda somente `up`; não aplica `sync({alter:true})` e não recria tab
 
 1. Interrompa gravações e faça backup completo do banco, incluindo `SequelizeMeta`.
 2. Restaure o backup em uma base separada e configure esta aplicação para acessar essa cópia.
-3. Confirme que `SequelizeMeta` registra as três migrations antigas. Se a base foi criada manualmente, primeiro reconcilie o schema com essas migrations; não marque arquivos como aplicados sem conferir.
+3. Confirme que `SequelizeMeta` registra as três migrations antigas. Se a base foi criada manualmente, primeiro reconcilie o schema com essas migrations; não marque arquivos como aplicados sem conferir. A nova versão acrescenta três migrations, que também devem ser aplicadas em bases criadas com versões anteriores deste monorepositório.
 4. Execute `npm run db:migrate`.
 5. Confira usuários, categorias, IDs, vínculos, datas e somas antes de liberar o uso.
 

@@ -4,7 +4,7 @@ import styles from './CategoryDetails.module.css';
 import edit from '../../assets/images/edit.svg';
 import trash from '../../assets/images/delete.svg';
 
-function CategoryDetails({ category, onClose, onDeleteSuccess, onEdit }) {
+function CategoryDetails({ category, onClose, onDeleteSuccess, onEdit, canEdit = true, canDelete = true }) {
   const [loading, setLoading] = useState(false);
 
   if (!category) return null;
@@ -45,19 +45,19 @@ function CategoryDetails({ category, onClose, onDeleteSuccess, onEdit }) {
 
       {/* Botões de Ação para o CRUD de Categorias (Excluir) */}
       <div className={styles.actions}>
-        <button
+        {canEdit && <button
             className={styles.editButton}
             onClick={() => onEdit(category)}
         >
           <img src={edit} alt="Editar" />
-        </button>
-        <button
+        </button>}
+        {canDelete && <button
           className={styles.deleteButton}
           onClick={handleDelete}
           disabled={loading}
         >
           <img src={trash} alt="Excluir" />
-        </button>
+        </button>}
       </div>
     </div>
   );

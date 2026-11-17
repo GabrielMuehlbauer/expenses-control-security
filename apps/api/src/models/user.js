@@ -7,7 +7,9 @@ const User = sequelize.define('user', {
   name: { type: DataTypes.STRING, allowNull: false, validate: { notEmpty: true, len: [3, 120] } },
   email: { type: DataTypes.STRING, allowNull: false, unique: true, validate: { isEmail: true, len: [3, 254] } },
   password: { type: DataTypes.STRING, allowNull: false, validate: { notEmpty: true } },
-  role: { type: DataTypes.STRING, defaultValue: 'user', allowNull: false }
+  role: { type: DataTypes.STRING, defaultValue: 'user', allowNull: false },
+  parentId: { type: DataTypes.UUID, allowNull: true, references: { model: 'users', key: 'id' }, onDelete: 'RESTRICT', onUpdate: 'CASCADE' },
+  permissions: { type: DataTypes.JSON, allowNull: true }
 }, { defaultScope: { attributes: { exclude: ['password'] } }, scopes: { withPassword: { attributes: {} } } });
 User.beforeSave(async user => {
   if (!user.changed('password')) return;
@@ -16,4 +18,8 @@ User.beforeSave(async user => {
 });
 async function create(name, email, password) { return User.create({ name, email, password, role: 'user' }); }
 async function getByEmail(email) { return User.scope('withPassword').findOne({ where: { email } }); }
-module.exports = { User, create, getByEmail };
+function publicUser(user) {
+  const { permissionsFor } = require('../middleware/permissions');
+  return { id: user.id, name: user.name, email: user.email, parentId: user.parentId || null, permissions: permissionsFor(user) };
+}
+module.exports = { User, create, getByEmail, publicUser };

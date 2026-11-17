@@ -17,7 +17,7 @@ test('cadastro, login, CRUD, texto seguro, persistencia e logout', async ({ page
   await expect(page).toHaveURL(/\/login$/);
   await page.getByLabel('Senha', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Minhas despesas' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Histórico financeiro' })).toBeVisible();
   await page.getByRole('button', { name: '+', exact: true }).click();
   let dialog = page.getByRole('dialog');
   await dialog.getByLabel('Nome da Categoria:').fill('Categoria navegador');
@@ -76,12 +76,12 @@ test('falha de dashboard oferece mensagem e nova tentativa', async ({ page }) =>
   await page.getByLabel('Senha', { exact: true }).fill('NavegadorSeguro!123');
   await page.getByRole('button', { name: 'Cadastrar', exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
-  await page.route('**/api/dashboard/total-expenses', route => route.fulfill({ status: 503, contentType: 'application/json', body: '{}' }));
+  await page.route('**/api/dashboard/summary', route => route.fulfill({ status: 503, contentType: 'application/json', body: '{}' }));
   await page.getByLabel('E-mail', { exact: true }).fill(email);
   await page.getByLabel('Senha', { exact: true }).fill('NavegadorSeguro!123');
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('Não foi possível atualizar');
-  await page.unroute('**/api/dashboard/total-expenses');
+  await page.unroute('**/api/dashboard/summary');
   await page.getByRole('button', { name: 'Tentar novamente' }).click();
   await expect(page.getByRole('alert')).toHaveCount(0);
   await page.getByRole('button', { name: 'Sair', exact: true }).click();

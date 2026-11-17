@@ -13,7 +13,7 @@ module.exports = async (req, _res, next) => {
   if (typeof claims.sub !== 'string' || typeof claims.jti !== 'string') throw httpError(401, 'Sessao invalida.');
   const session = await Session.findOne({ where: { id: claims.jti, userId: claims.sub } });
   if (!session || session.expiresAt <= new Date()) throw httpError(401, 'Sessao encerrada. Entre novamente.');
-  const user = await User.findByPk(claims.sub, { attributes: ['id', 'name', 'email'] });
+  const user = await User.findByPk(claims.sub, { attributes: ['id', 'name', 'email', 'parentId', 'permissions'] });
   if (!user) throw httpError(401, 'Sessao encerrada. Entre novamente.');
   if (req.csrfToken && !equal(hash(req.csrfToken), session.csrfHash)) throw httpError(403, 'Protecao CSRF invalida. Entre novamente.');
   req.user = user; req.session = session; next();
