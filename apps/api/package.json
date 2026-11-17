@@ -1,0 +1,47 @@
+{
+  "name": "@expenses-control/api",
+  "version": "3.0.0",
+  "description": "O Expenses Control é uma API RESTful desenvolvida em Node.js focada no gerenciamento de finanças pessoais.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --env-file-if-exists=.env.test --test --test-concurrency=1 test/*.test.js",
+    "dev": "node --watch src/server.js",
+    "db:migrate": "node src/database/migrate.js",
+    "lint": "eslint src test",
+    "db:seed": "node src/database/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielMuehlbauer/expenses-control-security.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GabrielMuehlbauer/expenses-control-security/issues"
+  },
+  "homepage": "https://github.com/GabrielMuehlbauer/expenses-control-security",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.5.0",
+    "mysql2": "^3.22.3",
+    "pdf-lib": "^1.17.1",
+    "sequelize": "^6.37.8",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "supertest": "^7.1.4"
+  },
+  "private": true
+}

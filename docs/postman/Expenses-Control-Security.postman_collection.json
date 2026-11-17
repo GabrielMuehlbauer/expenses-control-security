@@ -1,0 +1,543 @@
+{
+  "info": {
+    "name": "Expenses Control Security",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "csrfToken",
+      "value": ""
+    },
+    {
+      "key": "categoryId",
+      "value": ""
+    },
+    {
+      "key": "expenseId",
+      "value": ""
+    },
+    {
+      "key": "accountId",
+      "value": ""
+    },
+    {
+      "key": "childEmail",
+      "value": ""
+    },
+    {
+      "key": "childPassword",
+      "value": ""
+    },
+    {
+      "key": "childId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Obter CSRF",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/auth/csrf"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"CSRF disponivel\", () => pm.response.to.have.status(200));",
+              "pm.collectionVariables.set(\"csrfToken\", pm.response.json().csrfToken);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cadastrar usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/users",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Estudante\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Sessao atual",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/auth/session"
+      }
+    },
+    {
+      "name": "Criar categoria",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          },
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/categories",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Alimentacao\",\n  \"description\": \"Categoria de demonstracao\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Categoria criada\", () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set(\"categoryId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listar categorias",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/categories"
+      }
+    },
+    {
+      "name": "Criar despesa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          },
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/expenses",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Compra demonstrativa\",\n  \"amount\": \"12.34\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"date\": \"2026-01-10\",\n  \"description\": \"Dados ficticios\",\n  \"status\": \"PAGA\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Despesa criada\", () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set(\"expenseId\", pm.response.json().expense.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listar despesas",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/expenses"
+      }
+    },
+    {
+      "name": "Atualizar despesa",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          },
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/expenses/{{expenseId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"description\": \"\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Total",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/dashboard/total-expenses"
+      }
+    },
+    {
+      "name": "Quantidade",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/dashboard/expenses-count"
+      }
+    },
+    {
+      "name": "Por categoria",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/dashboard/expenses-by-category"
+      }
+    },
+    {
+      "name": "Excluir despesa",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          },
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/expenses/{{expenseId}}"
+      }
+    },
+    {
+      "name": "Excluir categoria",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          },
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "url": "{{baseUrl}}/categories/{{categoryId}}"
+      }
+    },
+    {
+      "name": "Resumo de saldo",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/dashboard/summary",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Criar receita recebida",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/entries",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Receita demonstrativa\",\n  \"amount\": \"100.00\",\n  \"type\": \"INCOME\",\n  \"status\": \"PAGA\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"date\": \"2026-01-10\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Listar receitas",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/entries?type=INCOME",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Criar filho",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/children",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Filho demonstrativo\",\n  \"email\": \"{{childEmail}}\",\n  \"password\": \"{{childPassword}}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Filho criado\", () => pm.response.to.have.status(201));",
+              "pm.collectionVariables.set(\"childId\", pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Listar filhos",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/children",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Permissoes do filho",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/children/{{childId}}/permissions",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"permissions\": [\n    \"VIEW\"\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "Consultar comprovante",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/entries/{{expenseId}}/receipt",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Baixar comprovante",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/entries/{{expenseId}}/receipt/download",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Anexar comprovante",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/entries/{{expenseId}}/receipt",
+        "header": [
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          },
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "receipt",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Remover comprovante",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/entries/{{expenseId}}/receipt",
+        "header": [
+          {
+            "key": "X-Account-Id",
+            "value": "{{accountId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-CSRF-Token",
+            "value": "{{csrfToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/auth/logout"
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+name: Validacao
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: ci-password-only
+          MYSQL_DATABASE: expenses_control_security_test
+        ports: ["3306:3306"]
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -pci-password-only"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    env:
+      NODE_ENV: test
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: expenses_control_security_test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ci-password-only
+      WEB_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      PLAYWRIGHT_CHANNEL: chromium
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Criar segredo efemero
+        run: node -e "require('fs').appendFileSync(process.env.GITHUB_ENV, 'JWT_SECRET='+require('crypto').randomBytes(48).toString('base64url')+'\n')"
+      - run: npm run lint
+      - run: npm run build
+      - run: npm audit --audit-level=moderate
+      - run: npm test
+      - name: Configurar servidor de testes
+        run: |
+          printf 'PORT=3001\n' > apps/api/.env.test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: evidencias-navegador
+          path: |
+            playwright-report/
+            test-results/

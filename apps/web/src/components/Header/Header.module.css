@@ -1,0 +1,64 @@
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.headerContent img {
+    max-width: 100px;
+}
+
+.totalValueContainer {
+    text-align: right;
+    color: var(--faded-yellowish-green);
+    padding-top: 10px;
+    display: flex;
+    gap: 25px;
+}
+
+.totalValueContainer p {
+    font-family: var(--font-family-accent);
+    font-size: 14px;
+}
+
+.totalValueContainer h2 {
+    font-family: var(--font-family-header);
+    font-weight: 400;
+}
+
+header button {
+    border: 1px solid var(--faded-yellowish-green);
+    padding: 9px 10px 7px 10px;
+    border-radius: 25px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+header button:hover {
+    background-color: var(--light-yellowish-green);
+    color: var(--dark-gray);
+}
+
+header button img {
+    width: 25px;
+}
+
+.logoutText {
+    margin-left: 5px;
+    font-family: var(--font-family-accent);
+    font-size: 14px;
+}
+
+.summary { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-end; }
+.totalValueContainer { flex-wrap: wrap; justify-content: flex-end; }
+@media (max-width: 600px) {
+    .headerContent { align-items: flex-start; gap: 12px; }
+    .totalValueContainer { gap: 10px; }
+    .summary { gap: 10px; }
+    .summary h2 { font-size: 18px; }
+}

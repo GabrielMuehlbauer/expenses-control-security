@@ -1,0 +1,28 @@
+.footerBackground {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    min-height: 160px;
+    padding: 35px 18px;
+    background: linear-gradient(transparent 0, var(--light-yellowish-green) 50%);
+}
+
+.footerContent {
+    color: var(--light-faded-yellowish-green);
+    padding-top: 20px;
+}
+
+.footerContent h1{
+    font-family: var(--font-family-header);
+    margin-bottom: 8px;
+    font-size: 3.85vh;
+}
+
+.footerContent p{
+    font-family: var(--font-family-accent);
+    line-height: 2.4vh;
+    font-size: 1.85vh;
+}

@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { rateLimit } = require('express-rate-limit');
+const { parentOnly } = require('../middleware/permissions');
+const { validate, validateId, child, permissionUpdate } = require('../middleware/validation');
+const view = require('../views/family');
+router.use(parentOnly);
+router.get('/', view.list);
+router.post('/', rateLimit({ windowMs: 3600000, limit: 20, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'Limite de criacao de contas atingido. Aguarde.' } }), validate(child), view.create);
+router.put('/:id/permissions', validateId, validate(permissionUpdate), view.update);
+module.exports = router;

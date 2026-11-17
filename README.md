@@ -6,6 +6,16 @@ Sistema web de controle de finanças pessoais, reunindo o frontend e a API dos p
 
 O histórico deste repositório começa com uma cópia atual, sem importar os commits anteriores. Consulte [a origem do código](docs/origem.md) e [as contribuições](docs/contribuicoes.md).
 
+## Funcionalidades
+
+- Cadastro e login, sessão protegida e logout no servidor.
+- Cadastro, edição, exclusão e histórico de receitas e despesas, com categorias e filtros.
+- Totais recebidos, pagos e saldo. Somente lançamentos pagos/recebidos entram no saldo; os pendentes continuam no histórico.
+- Um comprovante PDF, JPG ou PNG de até 5 MB por lançamento, com armazenamento privado e download autorizado.
+- Controle parental: o responsável cria contas de filhos, consulta seus lançamentos e define permissões. O filho inicia apenas com acesso de visualização aos próprios dados.
+
+No dashboard, use **Conta selecionada** para alternar entre a própria conta e a de um filho direto. Em **Controle parental**, crie uma conta com e-mail e senha inicial e habilite somente as funções desejadas. Para anexar um comprovante, salve o lançamento, abra os detalhes e use **Anexar comprovante**.
+
 ## Tecnologias
 
 - Node.js 24 LTS e npm 11.
@@ -35,13 +45,25 @@ node -e "console.log(require('node:crypto').randomBytes(48).toString('base64url'
 
 Coloque o valor gerado em `JWT_SECRET`. Configure o banco e suas credenciais no mesmo arquivo. Não publique esse arquivo.
 
+Os comprovantes ficam em `apps/api/data/receipts`, fora da pasta pública e ignorados pelo Git. O usuário do processo precisa escrever nessa pasta. Para outro local privado, configure `RECEIPT_DIRECTORY` com o caminho desejado. Faça backup dessa pasta junto com o banco. Nos testes, o diretório padrão é separado (`data/test-receipts`).
+
 Se estiver usando MySQL já instalado, crie um banco vazio `expenses_control_security` e um usuário exclusivo com acesso a ele. Não use credenciais de uma base real para os testes.
+
+Execute no cliente SQL como administrador local, substituindo a senha de exemplo por uma senha própria:
+
+```sql
+CREATE DATABASE expenses_control_security CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'expenses_app'@'localhost' IDENTIFIED BY 'SUBSTITUA_POR_UMA_SENHA_PROPRIA';
+GRANT ALL PRIVILEGES ON expenses_control_security.* TO 'expenses_app'@'localhost';
+```
+
+Essas permissões ficam limitadas ao banco local do projeto e permitem executar as migrations. Para produção, separe as credenciais de migração das credenciais de execução, concedendo ao processo da aplicação apenas as operações de dados necessárias.
 
 Como alternativa, para usar o banco do Compose no PowerShell:
 
 ```powershell
-$env:MYSQL_PASSWORD = Read-Host 'Senha do usuário da aplicação'
-$env:MYSQL_ROOT_PASSWORD = Read-Host 'Senha administrativa do banco local'
+$env:MYSQL_PASSWORD = [Net.NetworkCredential]::new('', (Read-Host 'Senha do usuário da aplicação' -AsSecureString)).Password
+$env:MYSQL_ROOT_PASSWORD = [Net.NetworkCredential]::new('', (Read-Host 'Senha administrativa do banco local' -AsSecureString)).Password
 docker compose up -d db
 ```
 
@@ -107,5 +129,14 @@ Os controles incluem validação de entrada no servidor, rejeição de campos in
 - [Testes e resultados](docs/testes.md)
 - [Origem e licença](docs/origem.md)
 - [Contribuições](docs/contribuicoes.md)
+- [Coleção Postman](docs/postman/Expenses-Control-Security.postman_collection.json)
 
-Licença MIT. As funcionalidades adicionais do enunciado serão descritas após a confirmação das regras de receitas, comprovantes e controle parental.
+Na coleção Postman, configure `email` e `password`, obtenha o CSRF e faça login. O cliente guarda os cookies automaticamente. Para consultar os dados de um filho, preencha `accountId` com seu ID; deixe vazio para a própria conta. As requisições são exemplos individuais: exclua dados demonstrativos somente depois de consultar saldo e anexar/baixar seus comprovantes.
+
+## Interface
+
+Exemplo com dados fictícios, mantendo as cores, tipografia e componentes do projeto original:
+
+![Dashboard com receitas, despesas e seleção de conta familiar](docs/images/dashboard.png)
+
+Licença MIT. As regras de acesso e as restrições dos comprovantes estão em [docs/seguranca.md](docs/seguranca.md).

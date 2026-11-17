@@ -1,0 +1,11 @@
+const express = require('express');
+const view = require('../views/category');
+const { validate, validateId, category } = require('../middleware/validation');
+const router = express.Router();
+const { requirePermission } = require('../middleware/permissions');
+router.post('/', requirePermission('CREATE'), validate(category), view.create);
+router.get('/', view.getAll);
+router.get('/:id', validateId, view.getById);
+router.put('/:id', requirePermission('EDIT'), validateId, validate(category), view.update);
+router.delete('/:id', requirePermission('DELETE'), validateId, view.remove);
+module.exports = router;

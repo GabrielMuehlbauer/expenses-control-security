@@ -1,0 +1,12 @@
+const express = require('express');
+const view = require('../views/expense');
+const { validate, validateId, expense } = require('../middleware/validation');
+const router = express.Router();
+const { requirePermission } = require('../middleware/permissions');
+router.use('/:id/receipt', require('./receiptRoutes'));
+router.post('/', requirePermission('CREATE'), validate(body => expense(body)), view.create);
+router.get('/', view.getAll);
+router.get('/:id', validateId, view.getById);
+router.put('/:id', requirePermission('EDIT'), validateId, validate(body => expense(body, true)), view.update);
+router.delete('/:id', requirePermission('DELETE'), validateId, view.remove);
+module.exports = router;

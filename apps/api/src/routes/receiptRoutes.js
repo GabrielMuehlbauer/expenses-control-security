@@ -1,0 +1,14 @@
+const router = require('express').Router({ mergeParams: true });
+const multer = require('multer');
+const { rateLimit } = require('express-rate-limit');
+const { requirePermission } = require('../middleware/permissions');
+const { validateId } = require('../middleware/validation');
+const { getById } = require('../models/expense');
+const view = require('../views/receipt');
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024, files: 1, fields: 0, parts: 1 } });
+router.use(validateId);
+router.get('/', view.get);
+router.get('/download', view.download);
+router.post('/', requirePermission('ATTACH'), rateLimit({ windowMs: 900000, limit: 20, standardHeaders: 'draft-8', legacyHeaders: false, message: { error: 'Muitos uploads. Aguarde e tente novamente.' } }), async (req, _res, next) => { await getById(req.params.id, req.accountId); next(); }, upload.single('receipt'), view.upload);
+router.delete('/', requirePermission('ATTACH'), requirePermission('DELETE'), view.remove);
+module.exports = router;
