@@ -6,7 +6,7 @@ function Footer() {
         <footer className={styles.footerBackground}>
             <div className={styles.footerContent}>
                 <h1>Expenses <i>Control</i></h1>
-                <p>Uma aplicação criada por Gabriel Müehlbauer</p>
+                <p>Gerencie suas finanças de forma simples e elegante</p>
             </div>
         </footer>
     )

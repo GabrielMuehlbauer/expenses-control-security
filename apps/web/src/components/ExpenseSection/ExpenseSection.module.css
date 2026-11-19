@@ -161,3 +161,21 @@
 .clearButton:hover {
     background-color: var(--yellowish-green);
 }
+
+@media (max-width: 420px) {
+    .expenseSectionHeader {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .expenseSectionHeader > div:first-child {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .expenseCount { margin-left: 0; }
+    .filterButton { flex: 0 0 auto; }
+}

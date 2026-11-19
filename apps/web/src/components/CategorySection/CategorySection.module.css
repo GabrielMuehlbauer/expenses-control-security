@@ -29,7 +29,13 @@
     flex-wrap: nowrap;
     width: 100%;
     overflow-x: auto;
+    margin-top: 12px;
     padding-bottom: 20px; /* Espaço para a barra de rolagem */
+}
+
+.emptyMessage {
+    margin-top: 4px;
+    color: var(--faded-yellowish-green);
 }
 
 /* Personalização da barra de scroll*/
@@ -52,8 +58,6 @@
     color: var(--faded-yellowish-green);
     border: 2px dashed var(--light-faded-yellowish-green);
     font-family: var(--font-family-body);
-    font-size: 70px;
-    font-weight: 100;
     width: 150px;
     min-width: 150px;
     height: 152px;
@@ -62,6 +66,11 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease-in-out;
+}
+
+.categoryCardAddButton svg {
+    width: 48px;
+    height: 48px;
 }
 
 .categoryCardAddButton:hover {

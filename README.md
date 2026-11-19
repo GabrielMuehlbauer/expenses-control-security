@@ -9,7 +9,7 @@ O histórico deste repositório começa com uma cópia atual, sem importar os co
 ## Funcionalidades
 
 - Cadastro e login, sessão protegida e logout no servidor.
-- Cadastro, edição, exclusão e histórico de receitas e despesas, com categorias e filtros.
+- Cadastro, edição, exclusão e histórico de ganhos e despesas, com categorias e filtros.
 - Totais recebidos, pagos e saldo. Somente lançamentos pagos/recebidos entram no saldo; os pendentes continuam no histórico.
 - Um comprovante PDF, JPG ou PNG de até 5 MB por lançamento, com armazenamento privado e download autorizado.
 - Controle parental: o responsável cria contas de filhos, consulta seus lançamentos e define permissões. O filho inicia apenas com acesso de visualização aos próprios dados.
@@ -137,6 +137,6 @@ Na coleção Postman, configure `email` e `password`, obtenha o CSRF e faça log
 
 Exemplo com dados fictícios, mantendo as cores, tipografia e componentes do projeto original:
 
-![Dashboard com receitas, despesas e seleção de conta familiar](docs/images/dashboard.png)
+![Dashboard com ganhos, despesas e seleção de conta familiar](docs/images/dashboard.png)
 
 Licença MIT. As regras de acesso e as restrições dos comprovantes estão em [docs/seguranca.md](docs/seguranca.md).

@@ -18,7 +18,7 @@ test('cadastro, login, CRUD, texto seguro, persistencia e logout', async ({ page
   await page.getByLabel('Senha', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Entrar', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Histórico financeiro' })).toBeVisible();
-  await page.getByRole('button', { name: '+', exact: true }).click();
+  await page.getByRole('button', { name: 'Adicionar categoria', exact: true }).click();
   let dialog = page.getByRole('dialog');
   await dialog.getByLabel('Nome da Categoria:').fill('Categoria navegador');
   await dialog.getByLabel('Descrição da Categoria:').fill('Teste de integracao');

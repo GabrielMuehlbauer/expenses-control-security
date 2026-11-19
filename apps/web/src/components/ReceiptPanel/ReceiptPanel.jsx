@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+import { MdDeleteOutline, MdDownload, MdInsertDriveFile, MdReceiptLong, MdUploadFile } from 'react-icons/md';
 import api from '../../services/api';
+import styles from './ReceiptPanel.module.css';
 export default function ReceiptPanel({ entryId, canAttach, canEdit, canDelete }) {
   const [receipt, setReceipt] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -36,11 +38,34 @@ export default function ReceiptPanel({ entryId, canAttach, canEdit, canDelete })
     catch (failure) { setError(failure.response?.data?.error || 'Não foi possível remover o comprovante.'); }
     finally { setBusy(false); }
   }
-  return <section style={{ margin: '20px 0', overflowWrap: 'anywhere' }} aria-label="Comprovante">
-    <h3>Comprovante</h3>
-    {receipt ? <><p>{receipt.originalName}</p><button type="button" disabled={busy} onClick={download}>Baixar comprovante</button>{canAttach && canDelete && <button type="button" disabled={busy} onClick={remove}>Remover comprovante</button>}</> : <p>Nenhum comprovante anexado.</p>}
-    {canAttach && loaded && (!receipt || canEdit) && <label style={{ display: 'block', marginTop: '12px' }}>{receipt ? 'Substituir comprovante' : 'Anexar comprovante'}<input type="file" accept=".pdf,.png,.jpg,.jpeg" aria-label="Arquivo do comprovante" onChange={upload} disabled={busy} style={{ display: 'block', maxWidth: '100%' }} /></label>}
-    {canAttach && <p>PDF, JPG ou PNG de até 5 MB.</p>}
-    {busy && <p role="status">Processando comprovante...</p>}{error && <p role="alert">{error}</p>}
+  return <section className={styles.panel} aria-label="Comprovante">
+    <header className={styles.header}>
+      <span className={styles.headerIcon} aria-hidden="true"><MdReceiptLong /></span>
+      <div>
+        <h3>Comprovante</h3>
+        <p>{receipt ? 'Arquivo anexado ao lançamento' : 'Nenhum comprovante anexado'}</p>
+      </div>
+    </header>
+
+    {receipt && <div className={styles.fileCard}>
+      <MdInsertDriveFile className={styles.fileIcon} aria-hidden="true" />
+      <span className={styles.fileName}>{receipt.originalName}</span>
+      <div className={styles.actions}>
+        <button className={styles.downloadButton} type="button" disabled={busy} onClick={download} aria-label="Baixar comprovante"><MdDownload aria-hidden="true" /><span>Baixar</span></button>
+        {canAttach && canDelete && <button className={styles.removeButton} type="button" disabled={busy} onClick={remove} aria-label="Remover comprovante"><MdDeleteOutline aria-hidden="true" /><span>Remover</span></button>}
+      </div>
+    </div>}
+
+    {canAttach && loaded && (!receipt || canEdit) && <label className={styles.uploadArea}>
+      <input className={styles.fileInput} type="file" accept=".pdf,.png,.jpg,.jpeg" aria-label="Arquivo do comprovante" onChange={upload} disabled={busy} />
+      <MdUploadFile aria-hidden="true" />
+      <span>
+        <strong>{receipt ? 'Substituir comprovante' : 'Selecionar comprovante'}</strong>
+        <small>PDF, JPG ou PNG • até 5 MB</small>
+      </span>
+    </label>}
+
+    {busy && <p className={styles.status} role="status">Processando comprovante...</p>}
+    {error && <p className={styles.error} role="alert">{error}</p>}
   </section>;
 }

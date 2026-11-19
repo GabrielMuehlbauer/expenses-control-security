@@ -1,51 +1,67 @@
 .headerContent {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(100px, 1fr) auto auto;
     align-items: center;
+    gap: 24px;
     margin-bottom: 20px;
 }
 
-.headerContent img {
+.logo {
+    display: block;
     max-width: 100px;
 }
 
-.totalValueContainer {
-    text-align: right;
+.summary {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(92px, auto));
+    gap: clamp(16px, 3vw, 40px);
+    align-items: center;
+    text-align: center;
     color: var(--faded-yellowish-green);
-    padding-top: 10px;
-    display: flex;
-    gap: 25px;
 }
 
-.totalValueContainer p {
+.summary p {
     font-family: var(--font-family-accent);
     font-size: 14px;
+    line-height: 1.2;
 }
 
-.totalValueContainer h2 {
+.summary h2 {
     font-family: var(--font-family-header);
     font-weight: 400;
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.2;
+    white-space: nowrap;
 }
 
-header button {
+.logoutContainer {
+    position: relative;
+    justify-self: end;
+}
+
+.logoutButton {
     border: 1px solid var(--faded-yellowish-green);
-    padding: 9px 10px 7px 10px;
+    padding: 9px 14px;
     border-radius: 25px;
     justify-content: center;
     display: flex;
     align-items: center;
     text-align: center;
     gap: 5px;
-    transition: all 0.3s ease-in-out;
+    color: var(--faded-yellowish-green);
+    background: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-header button:hover {
+.logoutButton:hover {
     background-color: var(--light-yellowish-green);
     color: var(--dark-gray);
+    transform: translateY(-1px);
 }
 
-header button img {
-    width: 25px;
+.logoutButton svg {
+    width: 23px;
+    height: 23px;
 }
 
 .logoutText {
@@ -54,11 +70,41 @@ header button img {
     font-size: 14px;
 }
 
-.summary { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-end; }
-.totalValueContainer { flex-wrap: wrap; justify-content: flex-end; }
-@media (max-width: 600px) {
-    .headerContent { align-items: flex-start; gap: 12px; }
-    .totalValueContainer { gap: 10px; }
-    .summary { gap: 10px; }
-    .summary h2 { font-size: 18px; }
+.logoutError {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: max-content;
+    max-width: min(280px, 80vw);
+    color: #7d3030;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .headerContent {
+        grid-template-columns: 1fr auto;
+        gap: 18px 12px;
+        align-items: start;
+    }
+
+    .logo { grid-column: 1; grid-row: 1; }
+    .logoutContainer { grid-column: 2; grid-row: 1; }
+
+    .summary {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        padding-top: 2px;
+    }
+
+    .summary > div:first-child { text-align: left; }
+    .summary > div:last-child { text-align: right; }
+    .summary h2 { font-size: clamp(14px, 4vw, 18px); }
+}
+
+@media (max-width: 380px) {
+    .logoutText { display: none; }
+    .logoutButton { padding: 9px 11px; }
 }

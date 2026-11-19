@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { MdClose } from 'react-icons/md';
 import styles from './Modal.module.css';
 function Modal({ isOpen, onClose, children }) {
   const contentRef = useRef(null);
@@ -24,7 +25,7 @@ function Modal({ isOpen, onClose, children }) {
   }, [isOpen]);
   if (!isOpen) return null;
   return <div className={styles.overlay} onClick={onClose}><div ref={contentRef} className={styles.content} onClick={event => event.stopPropagation()} role="dialog" aria-modal="true" aria-label="Detalhes ou formulário" tabIndex={-1}>
-    <button type="button" onClick={onClose} aria-label="Fechar janela" style={{ float: 'right', padding: '4px 10px' }}>×</button>{children}
+    <button type="button" onClick={onClose} aria-label="Fechar janela" title="Fechar" className={styles.closeButton}><MdClose aria-hidden="true" /></button>{children}
   </div></div>;
 }
 export default Modal;

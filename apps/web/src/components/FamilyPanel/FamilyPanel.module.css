@@ -1,6 +1,104 @@
-.panel { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 15px 0; color: var(--faded-yellowish-green); font-family: var(--font-family-body); }
-.panel select, .panel button { border: 1px solid var(--faded-yellowish-green); border-radius: 20px; padding: 10px; background: var(--light-yellowish-green); color: var(--dark-gray); max-width: 100%; }
-.panel label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.form { display: flex; flex-direction: column; gap: 12px; margin: 18px 0; }
-.permissions { border: 1px solid var(--faded-yellowish-green); padding: 12px; margin: 16px 0; border-radius: 15px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 18px 0 22px;
+  color: var(--faded-yellowish-green);
+  font-family: var(--font-family-body);
+}
+
+.panel select,
+.panel button {
+  border: 1px solid var(--faded-yellowish-green);
+  border-radius: 22px;
+  padding: 10px 14px;
+  background: var(--light-yellowish-green);
+  color: var(--dark-gray);
+  max-width: 100%;
+}
+
+.panel label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.controlLabel,
+.parentalButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.controlLabel svg,
+.parentalButton svg {
+  width: 21px;
+  height: 21px;
+  color: var(--faded-yellowish-green);
+  flex: 0 0 auto;
+}
+
+.parentalButton {
+  font-family: var(--font-family-accent);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.parentalButton:hover {
+  background: var(--pastel-yellowish-green);
+  transform: translateY(-1px);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.permissions {
+  border: 1px solid var(--faded-yellowish-green);
+  padding: 12px;
+  margin: 16px 0;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
 .permissions p { overflow-wrap: anywhere; }
+
+@media (max-width: 560px) {
+  .panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .accountSelector {
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .controlLabel > span,
+  .parentalButton > span { display: none; }
+
+  .accountSelector select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .parentalButton {
+    width: 43px;
+    height: 43px;
+    padding: 0 !important;
+    justify-content: center;
+  }
+
+  .panel > [role='alert'] { grid-column: 1 / -1; }
+}

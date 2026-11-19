@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const crypto = require('node:crypto');
 const sharp = require('sharp');
-test('responsavel, filho, receitas, saldo e comprovante autorizado', async ({ page }, testInfo) => {
+test('responsavel, filho, ganhos, saldo e comprovante autorizado', async ({ page }, testInfo) => {
   page.on('dialog', dialog => dialog.accept());
   const run = crypto.randomBytes(6).toString('hex');
   const parentEmail = `parent-browser-${run}@example.com`, childEmail = `child-browser-${run}@example.com`, password = 'FamiliaNavegador!123';
@@ -30,7 +30,7 @@ test('responsavel, filho, receitas, saldo e comprovante autorizado', async ({ pa
   await page.getByRole('button', { name: 'Fechar janela' }).click();
   await page.getByLabel('Conta selecionada').selectOption({ label: 'Filho navegador' });
   await expect(page.getByText('Nenhuma categoria registrada.')).toBeVisible();
-  await page.getByRole('button', { name: '+', exact: true }).click();
+  await page.getByRole('button', { name: 'Adicionar categoria', exact: true }).click();
   dialog = page.getByRole('dialog');
   await dialog.getByLabel('Nome da Categoria:').fill('Categoria familiar');
   await dialog.getByLabel('Descrição da Categoria:').fill('Financas do filho');
@@ -47,7 +47,7 @@ test('responsavel, filho, receitas, saldo e comprovante autorizado', async ({ pa
     await form.getByRole('button', { name: `Adicionar ${type}`, exact: true }).click();
     await expect(page.getByRole('heading', { name: title, exact: true })).toBeVisible();
   }
-  await createEntry('Receita', 'Mesada recebida', '100.00');
+  await createEntry('Ganho', 'Mesada recebida', '100.00');
   await createEntry('Despesa', 'Compra do filho', '25.50');
   await expect(page.getByText(/74,50/)).toBeVisible();
   await page.getByRole('heading', { name: 'Compra do filho', exact: true }).click();

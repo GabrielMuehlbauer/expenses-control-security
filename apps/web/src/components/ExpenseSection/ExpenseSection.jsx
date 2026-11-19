@@ -68,7 +68,7 @@ function ExpenseSection({ onExpenseClick, categories = [], expenses = [], loadin
                                 <option value="PENDENTE">Pendentes</option>
                             </select>
 
-                            <select aria-label="Filtrar tipo de lançamento" className={styles.filterInput} value={filterType} onChange={event => setFilterType(event.target.value)}><option value="">Receitas e despesas</option><option value="EXPENSE">Despesas</option><option value="INCOME">Receitas</option></select>
+                            <select aria-label="Filtrar tipo de lançamento" className={styles.filterInput} value={filterType} onChange={event => setFilterType(event.target.value)}><option value="">Ganhos e despesas</option><option value="EXPENSE">Despesas</option><option value="INCOME">Ganhos</option></select>
                             <select className={styles.filterInput} value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
                                 <option value="">Categoria...</option>
                                 {categories.map((cat) => (

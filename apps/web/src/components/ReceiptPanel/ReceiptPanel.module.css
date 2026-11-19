@@ -1,0 +1,184 @@
+.panel {
+  margin-top: 20px;
+  padding: 18px;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--light-faded-yellowish-green);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--light-yellowish-green) 36%, var(--light-gray));
+  color: var(--faded-yellowish-green);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.headerIcon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--light-yellowish-green);
+  color: var(--faded-yellowish-green);
+}
+
+.headerIcon svg {
+  width: 23px;
+  height: 23px;
+}
+
+.header h3 {
+  font-family: var(--font-family-header);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.header p {
+  margin-top: 3px;
+  color: var(--dark-gray);
+  font-size: 14px;
+}
+
+.uploadArea {
+  min-height: 92px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 2px dashed var(--light-faded-yellowish-green);
+  border-radius: 16px;
+  background: rgba(242, 242, 242, 0.65);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+}
+
+.uploadArea:hover {
+  border-color: var(--faded-yellowish-green);
+  background: var(--light-yellowish-green);
+  transform: translateY(-1px);
+}
+
+.uploadArea:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--yellowish-green) 70%, white);
+  outline-offset: 3px;
+}
+
+.uploadArea > svg {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+}
+
+.uploadArea > span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.uploadArea strong {
+  font-family: var(--font-family-accent);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.uploadArea small {
+  color: var(--dark-gray);
+  font-size: 12px;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.fileCard {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  border-radius: 14px;
+  background: var(--light-gray);
+  border: 1px solid var(--light-yellowish-green);
+}
+
+.fileIcon {
+  width: 25px;
+  height: 25px;
+}
+
+.fileName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.actions:has(:only-child) { grid-template-columns: 1fr; }
+
+.actions button {
+  min-height: 40px;
+  padding: 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 20px;
+  font-family: var(--font-family-accent);
+  font-size: 12px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.actions button:hover:not(:disabled) { transform: translateY(-1px); }
+.actions button:disabled { cursor: wait; opacity: 0.65; }
+.actions button svg { width: 18px; height: 18px; flex: 0 0 auto; }
+
+.downloadButton {
+  background: var(--faded-yellowish-green);
+  color: var(--light-gray);
+}
+
+.downloadButton:hover:not(:disabled) { background: var(--light-faded-yellowish-green); }
+
+.removeButton {
+  border: 1px solid #993f3f;
+  background: transparent;
+  color: #7d3030;
+}
+
+.removeButton:hover:not(:disabled) { background: rgba(153, 63, 63, 0.1); }
+
+.fileCard + .uploadArea { margin-top: 10px; }
+
+.status,
+.error {
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.status { color: var(--faded-yellowish-green); }
+.error { color: #7d3030; }
+
+@media (max-width: 380px) {
+  .panel { padding: 14px; }
+  .actions { grid-template-columns: 1fr; }
+}

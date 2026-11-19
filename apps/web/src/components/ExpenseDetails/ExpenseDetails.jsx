@@ -78,7 +78,7 @@ function ExpenseDetails({ expense, onClose, onExpenseDeleted, onEdit, canEdit = 
 
       {/* Bloco de destaque para o Valor da Despesa (bem grande, igual ao protótipo) */}
       <div className={styles.amountContainer}>
-        <p className={styles.amountLabel}>{expense.type === 'INCOME' ? 'Valor da Receita' : 'Valor da Despesa'}</p>
+        <p className={styles.amountLabel}>{expense.type === 'INCOME' ? 'Valor do Ganho' : 'Valor da Despesa'}</p>
         <h3 className={styles.amountValue}>{currency(expense.amount)}</h3>
       </div>
 

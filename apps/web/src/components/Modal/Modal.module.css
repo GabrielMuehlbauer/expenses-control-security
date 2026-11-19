@@ -26,6 +26,38 @@
     animation: fadeInContent 0.5s ease;
 }
 
+.closeButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--light-faded-yellowish-green);
+    border-radius: 50%;
+    background-color: var(--light-gray);
+    color: var(--faded-yellowish-green);
+    box-shadow: 0 2px 8px rgba(53, 53, 53, 0.08);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.closeButton svg {
+    width: 22px;
+    height: 22px;
+}
+
+.closeButton:hover {
+    background-color: var(--light-yellowish-green);
+    color: var(--dark-gray);
+    transform: translateY(-1px);
+}
+
+.closeButton:active { transform: translateY(0); }
+
 @keyframes fadeInOverlay {
   from {
     background-color: rgba(0, 0, 0, 0);
@@ -46,4 +78,16 @@
   to {
     opacity: 1;
   }
+}
+
+@media (max-width: 480px) {
+    .content {
+        width: calc(100% - 32px);
+        padding: 62px 20px 28px;
+    }
+
+    .closeButton {
+        top: 14px;
+        right: 14px;
+    }
 }

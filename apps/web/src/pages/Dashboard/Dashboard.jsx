@@ -60,7 +60,7 @@ function DashboardAccount() {
         <ExpenseSection onExpenseClick={openEntry} categories={allCategories} expenses={expenses} loading={loading} />
       </div>
       {can('CREATE') && <div className={styles.entryActions}>
-        <WideButton text="Criar Despesa +" onClick={() => createEntry('EXPENSE')} /><WideButton text="Criar Receita +" onClick={() => createEntry('INCOME')} />
+        <WideButton text="Criar Despesa +" onClick={() => createEntry('EXPENSE')} /><WideButton text="Criar Ganho +" onClick={() => createEntry('INCOME')} />
       </div>}
       <Modal isOpen={expenseFormOpen} onClose={() => setExpenseFormOpen(false)}>
         <ExpenseForm onClose={() => setExpenseFormOpen(false)} onExpenseAdded={entrySaved} expenseToEdit={expenseToEdit} defaultType={defaultType} />

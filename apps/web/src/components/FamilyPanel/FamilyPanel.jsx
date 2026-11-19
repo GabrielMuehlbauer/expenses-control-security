@@ -4,6 +4,7 @@ import api from '../../services/api';
 import Modal from '../Modal/Modal';
 import Input from '../Input/Input';
 import WideButton from '../WideButton/WideButton';
+import { MdAccountBalanceWallet, MdFamilyRestroom } from 'react-icons/md';
 import styles from './FamilyPanel.module.css';
 const permissionLabels = { VIEW: 'Visualizar', CREATE: 'Criar lançamentos e categorias', EDIT: 'Editar', DELETE: 'Excluir', ATTACH: 'Anexar comprovantes' };
 export default function FamilyPanel() {
@@ -39,8 +40,11 @@ export default function FamilyPanel() {
     finally { setBusy(false); }
   }
   return <section className={styles.panel} aria-label="Contas da família">
-    <label>Conta selecionada <select value={accountId} onChange={event => selectAccount(event.target.value)}><option value="">Minha conta</option>{children.map(child => <option key={child.id} value={child.id}>{child.name}</option>)}</select></label>
-    <button type="button" onClick={() => setOpen(true)}>Controle parental</button>
+    <label className={styles.accountSelector}>
+      <span className={styles.controlLabel}><MdAccountBalanceWallet aria-hidden="true" /><span>Conta</span></span>
+      <select aria-label="Conta selecionada" value={accountId} onChange={event => selectAccount(event.target.value)}><option value="">Minha conta</option>{children.map(child => <option key={child.id} value={child.id}>{child.name}</option>)}</select>
+    </label>
+    <button className={styles.parentalButton} type="button" onClick={() => setOpen(true)} aria-label="Controle parental" title="Abrir controle parental"><MdFamilyRestroom aria-hidden="true" /><span>Família</span></button>
     {error && !open && <p role="alert">{error}</p>}
     <Modal isOpen={open} onClose={() => setOpen(false)}>
       <h2>Controle parental</h2><p>Os filhos acessam somente os próprios dados. O acesso inicial é apenas para visualizar.</p>

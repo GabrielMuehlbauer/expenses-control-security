@@ -8,7 +8,7 @@ import Select from "../Select/Select";
 // Adicionamos a prop 'expenseToEdit'
 function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit, defaultType = 'EXPENSE' }) {
     const [type, setType] = useState(expenseToEdit?.type || defaultType);
-    const label = type === 'INCOME' ? 'Receita' : 'Despesa';
+    const label = type === 'INCOME' ? 'Ganho' : 'Despesa';
     // 1. Estados dos inputs (Se tiver expenseToEdit, preenche com os dados, senão, fica vazio)
     const [title, setTitle] = useState(expenseToEdit ? expenseToEdit.title : "");
     const [amount, setAmount] = useState(expenseToEdit ? expenseToEdit.amount : "");
@@ -96,7 +96,7 @@ function ExpenseForm({ onClose, onExpenseAdded, expenseToEdit, defaultType = 'EX
                 <h2 className={styles.title}><i>{expenseToEdit ? "Editar" : "Criar"}</i> {label}</h2>
             </div>
             <div className={styles.inputGroup}>
-                <Select label="Tipo:" id="entry-type" value={type} onChange={event => setType(event.target.value)} options={[{ value: 'EXPENSE', label: 'Despesa' }, { value: 'INCOME', label: 'Receita' }]} required />
+                <Select label="Tipo:" id="entry-type" value={type} onChange={event => setType(event.target.value)} options={[{ value: 'EXPENSE', label: 'Despesa' }, { value: 'INCOME', label: 'Ganho' }]} required />
                 <Input label={`Título da ${label}:`} type="text" maxLength={150} placeholder="Título do lançamento" value={title} onChange={(e) => setTitle(e.target.value)} required/>
                 <Input label={`Data da ${label}:`} type="date" value={date} onChange={(e) => setDate(e.target.value)} required/>
                 <Input label={`Descrição da ${label}:`} type="text" maxLength={255} placeholder="Descrição do lançamento" value={description} onChange={(e) => setDescription(e.target.value)}/>

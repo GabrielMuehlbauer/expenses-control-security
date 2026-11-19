@@ -1,5 +1,6 @@
 import styles from './CategorySection.module.css';
 import CategoryCard from '../CategoryCard/CategoryCard';
+import { MdAdd } from 'react-icons/md';
 
 function CategorySection({ allCategories = [], categoryTotals = [], loading, onAddClick, onCategoryClick, canCreate = true }) {
 
@@ -8,6 +9,7 @@ function CategorySection({ allCategories = [], categoryTotals = [], loading, onA
             <div className={styles.categorySectionContent}>
                 <h2>Despesas por categoria</h2>
                 <p>Inclui lançamentos pendentes.</p>
+                {!loading && allCategories.length === 0 && <p className={styles.emptyMessage}>Nenhuma categoria registrada.</p>}
                 <div className={styles.containerCards}>
                     {loading ? (
                         <p>Carregando...</p>
@@ -26,12 +28,10 @@ function CategorySection({ allCategories = [], categoryTotals = [], loading, onA
                                 />
                             );
                         })
-                    ) : (
-                        <p>Nenhuma categoria registrada.</p>
-                    )}
+                    ) : null}
 
-                    {canCreate && <button className={styles.categoryCardAddButton} onClick={onAddClick}>
-                                +
+                    {canCreate && <button className={styles.categoryCardAddButton} onClick={onAddClick} aria-label="Adicionar categoria" title="Adicionar categoria">
+                                <MdAdd aria-hidden="true" />
                             </button>}
                 </div>
             </div>
